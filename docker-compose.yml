@@ -1,11 +1,26 @@
 version: "3.7"
 services:
   frontend:
-    build: frontend/
+    build:
+      context: frontend/
+      dockerfile: Dockerfile
+      args:
+        CDN_ADDRESS: http://localhost:3001/
     ports:
       - "3000:80"
     environment:
-      - SERVER_CORS_ALLOW_ORIGINS=http://localhost:8080,http://localhost:3000,http://localhost:8000
+      - SERVER_CORS_ALLOW_ORIGINS=http://localhost:8080,http://localhost:3000,http://localhost:3001,http://localhost:8000
+
+  cdn:
+    build:
+      context: frontend/
+      dockerfile: Dockerfile
+      args:
+        CDN_ADDRESS: http://localhost:3001/
+    ports:
+      - "3001:80"
+    environment:
+      - SERVER_CORS_ALLOW_ORIGINS=http://localhost:8080,http://localhost:3000,http://localhost:3001,http://localhost:8000
 
   backend:
     build: backend/
